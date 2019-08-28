@@ -54,7 +54,8 @@
         // 获取片元着色器源码
         const fragmentShaderSource = document.querySelector('#fragmentShader').innerHTML
         // 绘制图形
-        webGl_Graphing(canvas, vertexShaderSource, fragmentShaderSource)
+        const webgl = new webGL(canvas, vertexShaderSource, fragmentShaderSource)
+        webgl.webGl_Graphing()
 
     }
 </script>
