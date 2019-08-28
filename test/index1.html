@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="./css">
+    <title>Title</title>
+</head>
+<body>
+<canvas id="canvas"></canvas>
+</body>
+<script type="x-shader/x-fragment" id="vertexShader">
+    /* 变量定义
+      attribue  只能在顶点着色器定义
+      uniform 顶点、片元都能定义
+    */
+    //设置浮点数精度为中等精度
+    precision mediump float;
+    //接收点在 canvas 坐标系上的坐标 (x, y)
+    attribute vec2 a_Position;
+    //接收 canvas 的宽高尺寸
+    attribute vec2 a_Screen_Size;
+    void main(){
+        //start 将屏幕坐标系转化为裁剪坐标（裁剪坐标系）
+        vec2 position = (a_Position / a_Screen_Size) * 2.0 - 1.0;
+        position = position * vec2(1.0, -1.0);
+        gl_Position = vec4(position, 0, 1);
+        //end 将屏幕坐标系转化为裁剪坐标（裁剪坐标系）
+
+        //声明要绘制的点的大小。
+        gl_PointSize = 10.0;
+    }
+</script>
+<script type="x-shader/x-fragment" id="fragmentShader">
+    //设置浮点数精度为中等精度
+    precision mediump float;
+    //接收 JavaScript 传过来的颜色值（RGBA）。
+    uniform vec4 u_Color;
+    void main(){
+        //将普通的颜色表示转化为 WebGL 需要的表示方式，即将【0-255】转化到【0,1】之间。
+        vec4 color = u_Color / vec4(255, 255, 255, 1);
+        // 设置点的颜色
+        gl_FragColor = color;
+    }
+</script>
+<script src="./js/tools.js"></script>
+<script src="./js/webGL-main.js"></script>
+<script>
+    window.onload = function () {
+        // 设置canvas大小
+        settingSize()
+        const canvas = document.querySelector('#canvas')
+        // 获取顶点着色器源码
+        const vertexShaderSource = document.querySelector('#vertexShader').innerHTML
+        // 获取片元着色器源码
+        const fragmentShaderSource = document.querySelector('#fragmentShader').innerHTML
+        // 绘制图形
+        webGl_Graphing(canvas, vertexShaderSource, fragmentShaderSource)
+
+    }
+</script>
+</html>
